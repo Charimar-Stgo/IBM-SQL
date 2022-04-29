@@ -1,0 +1,231 @@
+Database        : crn:v1:bluemix:public:dashdb-for-transactions:us-south:a/e1fccd3bf5e74d4a9a66b13bb942d5c9:84a4da94-1abb-4b3e-8f25-5df9dceecadf::
+Host name       : db2-icd-prod-us-south-db-0abbw-private-alb.db2.databases.appdomain.cloud                                                        
+Authorization Id: kft07830                                                                                                                        
+Run method      : JDBC                                                                                                                            
+Date            : Apr 29, 2022 5:57:24 PM                                                                                                         
+Status          : completed                                                                                                                       
+
+SELECT * FROM EMPLOYEES WHERE JOB_ID IN (SELECT JOB_IDENT FROM JOBS)
+
+SELECT * FROM EMPLOYEES WHERE JOB_ID IN (SELECT JOB_IDENT FROM JOBS WHERE JOB_TITLE = 'Jr. Designer')
+
+SELECT JOB_TITLE, MIN_SALARY, MAX_SALARY, JOB_IDENT FROM JOBS WHERE JOB_IDENT IN (SELECT JOB_ID FROM EMPLOYEES WHERE SALARY > 70000)
+
+SELECT JOB_TITLE, MIN_SALARY, MAX_SALARY, JOB_IDENT FROM JOBS WHERE JOB_IDENT IN (SELECT JOB_ID FROM EMPLOYEES WHERE YEAR(B_DATE) > 1976 AND SEX='F')
+
+SELECT * FROM EMPLOYEES, JOBS
+
+SELECT * FROM EMPLOYEES E, JOBS J WHERE E.JOB_ID = J.JOB_IDENT
+
+SELECT E.EMP_ID, E.F_NAME, E.L_NAME, J.JOB_TITLE FROM EMPLOYEES E, JOBS J WHERE E.JOB_ID = J.JOB_IDENT
+
+
+
+=======================================================================================
+SELECT * FROM EMPLOYEES WHERE JOB_ID IN (SELECT JOB_IDENT FROM JOBS)
+
+Run time (seconds): 0.004    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  SSN       B_DATE     SEX ADDRESS                      JOB_ID    SALARY    MANAGER_ID DEP_ID   
+--------- ------- ------- --------- ---------- --- ---------------------------- --------- --------- ---------- ---------
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2        
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5        
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5        
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5        
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2        
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2        
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7        
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7        
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7        
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5        
+
+
+=======================================================================================
+SELECT * FROM EMPLOYEES WHERE JOB_ID IN (SELECT JOB_IDENT FROM JOBS WHERE JOB_TITLE = 'Jr. Designer')
+
+Run time (seconds): 0.023    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME SSN       B_DATE     SEX ADDRESS                     JOB_ID    SALARY   MANAGER_ID DEP_ID   
+--------- ------- ------ --------- ---------- --- --------------------------- --------- -------- ---------- ---------
+E1007     Mary    Thomas 123412    1975-05-05 F   100 Rose Pl, Gary,IL        650       65000.00 30003      7        
+E1008     Bharath Gupta  123413    1985-05-06 M   145 Berry Ln, Naperville,IL 660       65000.00 30003      7        
+
+
+=======================================================================================
+SELECT JOB_TITLE, MIN_SALARY, MAX_SALARY, JOB_IDENT FROM JOBS WHERE JOB_IDENT IN (SELECT JOB_ID FROM EMPLOYEES WHERE SALARY > 70000)
+
+Run time (seconds): 0.003    
+Status            : succeeded
+
+JOB_TITLE             MIN_SALARY MAX_SALARY JOB_IDENT
+--------------------- ---------- ---------- ---------
+Sr. Architect           60000.00  100000.00 100      
+Sr.Software Developer   60000.00   80000.00 200      
+Lead Architect          70000.00  100000.00 600      
+
+
+=======================================================================================
+SELECT JOB_TITLE, MIN_SALARY, MAX_SALARY, JOB_IDENT FROM JOBS WHERE JOB_IDENT IN (SELECT JOB_ID FROM EMPLOYEES WHERE YEAR(B_DATE) > 1976 AND SEX='F')
+
+Run time (seconds): 0.003    
+Status            : succeeded
+
+JOB_TITLE      MIN_SALARY MAX_SALARY JOB_IDENT
+-------------- ---------- ---------- ---------
+Sr. Designer     70000.00   90000.00 220      
+Sr. Designer     70000.00   90000.00 234      
+Lead Architect   70000.00  100000.00 600      
+
+
+=======================================================================================
+SELECT * FROM EMPLOYEES, JOBS
+
+Run time (seconds): 0.006    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  SSN       B_DATE     SEX ADDRESS                      JOB_ID    SALARY    MANAGER_ID DEP_ID    JOB_IDENT JOB_TITLE             MIN_SALARY MAX_SALARY
+--------- ------- ------- --------- ---------- --- ---------------------------- --------- --------- ---------- --------- --------- --------------------- ---------- ----------
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         100       Sr. Architect           60000.00  100000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         100       Sr. Architect           60000.00  100000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         100       Sr. Architect           60000.00  100000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         100       Sr. Architect           60000.00  100000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         100       Sr. Architect           60000.00  100000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         100       Sr. Architect           60000.00  100000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         100       Sr. Architect           60000.00  100000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         100       Sr. Architect           60000.00  100000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         100       Sr. Architect           60000.00  100000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         100       Sr. Architect           60000.00  100000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         200       Sr.Software Developer   60000.00   80000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         200       Sr.Software Developer   60000.00   80000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         200       Sr.Software Developer   60000.00   80000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         200       Sr.Software Developer   60000.00   80000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         200       Sr.Software Developer   60000.00   80000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         200       Sr.Software Developer   60000.00   80000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         200       Sr.Software Developer   60000.00   80000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         200       Sr.Software Developer   60000.00   80000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         200       Sr.Software Developer   60000.00   80000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         200       Sr.Software Developer   60000.00   80000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         220       Sr. Designer            70000.00   90000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         220       Sr. Designer            70000.00   90000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         220       Sr. Designer            70000.00   90000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         220       Sr. Designer            70000.00   90000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         220       Sr. Designer            70000.00   90000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         220       Sr. Designer            70000.00   90000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         220       Sr. Designer            70000.00   90000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         220       Sr. Designer            70000.00   90000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         220       Sr. Designer            70000.00   90000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         220       Sr. Designer            70000.00   90000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         234       Sr. Designer            70000.00   90000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         234       Sr. Designer            70000.00   90000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         234       Sr. Designer            70000.00   90000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         234       Sr. Designer            70000.00   90000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         234       Sr. Designer            70000.00   90000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         234       Sr. Designer            70000.00   90000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         234       Sr. Designer            70000.00   90000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         234       Sr. Designer            70000.00   90000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         234       Sr. Designer            70000.00   90000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         234       Sr. Designer            70000.00   90000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         300       Jr.Software Developer   40000.00   60000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         300       Jr.Software Developer   40000.00   60000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         300       Jr.Software Developer   40000.00   60000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         300       Jr.Software Developer   40000.00   60000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         300       Jr.Software Developer   40000.00   60000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         300       Jr.Software Developer   40000.00   60000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         300       Jr.Software Developer   40000.00   60000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         300       Jr.Software Developer   40000.00   60000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         300       Jr.Software Developer   40000.00   60000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         300       Jr.Software Developer   40000.00   60000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         400       Jr.Software Developer   40000.00   60000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         400       Jr.Software Developer   40000.00   60000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         400       Jr.Software Developer   40000.00   60000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         400       Jr.Software Developer   40000.00   60000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         400       Jr.Software Developer   40000.00   60000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         400       Jr.Software Developer   40000.00   60000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         400       Jr.Software Developer   40000.00   60000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         400       Jr.Software Developer   40000.00   60000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         400       Jr.Software Developer   40000.00   60000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         400       Jr.Software Developer   40000.00   60000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         500       Jr. Architect           50000.00   70000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         500       Jr. Architect           50000.00   70000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         500       Jr. Architect           50000.00   70000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         500       Jr. Architect           50000.00   70000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         500       Jr. Architect           50000.00   70000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         500       Jr. Architect           50000.00   70000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         500       Jr. Architect           50000.00   70000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         500       Jr. Architect           50000.00   70000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         500       Jr. Architect           50000.00   70000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         500       Jr. Architect           50000.00   70000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         600       Lead Architect          70000.00  100000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         600       Lead Architect          70000.00  100000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         600       Lead Architect          70000.00  100000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         600       Lead Architect          70000.00  100000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         600       Lead Architect          70000.00  100000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         600       Lead Architect          70000.00  100000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         600       Lead Architect          70000.00  100000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         600       Lead Architect          70000.00  100000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         600       Lead Architect          70000.00  100000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         600       Lead Architect          70000.00  100000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         650       Jr. Designer            60000.00   70000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         650       Jr. Designer            60000.00   70000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         650       Jr. Designer            60000.00   70000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         650       Jr. Designer            60000.00   70000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         650       Jr. Designer            60000.00   70000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         650       Jr. Designer            60000.00   70000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         650       Jr. Designer            60000.00   70000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         650       Jr. Designer            60000.00   70000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         650       Jr. Designer            60000.00   70000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         650       Jr. Designer            60000.00   70000.00
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         660       Jr. Designer            60000.00   70000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         660       Jr. Designer            60000.00   70000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         660       Jr. Designer            60000.00   70000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         660       Jr. Designer            60000.00   70000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         660       Jr. Designer            60000.00   70000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         660       Jr. Designer            60000.00   70000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         660       Jr. Designer            60000.00   70000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         660       Jr. Designer            60000.00   70000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         660       Jr. Designer            60000.00   70000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         660       Jr. Designer            60000.00   70000.00
+
+
+=======================================================================================
+SELECT * FROM EMPLOYEES E, JOBS J WHERE E.JOB_ID = J.JOB_IDENT
+
+Run time (seconds): 0.003    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  SSN       B_DATE     SEX ADDRESS                      JOB_ID    SALARY    MANAGER_ID DEP_ID    JOB_IDENT JOB_TITLE             MIN_SALARY MAX_SALARY
+--------- ------- ------- --------- ---------- --- ---------------------------- --------- --------- ---------- --------- --------- --------------------- ---------- ----------
+E1001     John    Thomas  123456    1976-01-09 M   5631 Rice, OakPark,IL        100       100000.00 30001      2         100       Sr. Architect           60000.00  100000.00
+E1002     Alice   James   123457    1972-07-31 F   980 Berry ln, Elgin,IL       200        80000.00 30002      5         200       Sr.Software Developer   60000.00   80000.00
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300        50000.00 30002      5         300       Jr.Software Developer   40000.00   60000.00
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400        60000.00 30004      5         400       Jr.Software Developer   40000.00   60000.00
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500        70000.00 30001      2         500       Jr. Architect           50000.00   70000.00
+E1006     Nancy   Allen   123411    1978-02-06 F   111 Green Pl, Elgin,IL       600        90000.00 30001      2         600       Lead Architect          70000.00  100000.00
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650        65000.00 30003      7         650       Jr. Designer            60000.00   70000.00
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660        65000.00 30003      7         660       Jr. Designer            60000.00   70000.00
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234        70000.00 30003      7         234       Sr. Designer            70000.00   90000.00
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220        70000.00 30004      5         220       Sr. Designer            70000.00   90000.00
+
+
+=======================================================================================
+SELECT E.EMP_ID, E.F_NAME, E.L_NAME, J.JOB_TITLE FROM EMPLOYEES E, JOBS J WHERE E.JOB_ID = J.JOB_IDENT
+
+Run time (seconds): 0.021    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  JOB_TITLE            
+--------- ------- ------- ---------------------
+E1001     John    Thomas  Sr. Architect        
+E1002     Alice   James   Sr.Software Developer
+E1003     Steve   Wells   Jr.Software Developer
+E1004     Santosh Kumar   Jr.Software Developer
+E1005     Ahmed   Hussain Jr. Architect        
+E1006     Nancy   Allen   Lead Architect       
+E1007     Mary    Thomas  Jr. Designer         
+E1008     Bharath Gupta   Jr. Designer         
+E1009     Andrea  Jones   Sr. Designer         
+E1010     Ann     Jacob   Sr. Designer         
+
+
