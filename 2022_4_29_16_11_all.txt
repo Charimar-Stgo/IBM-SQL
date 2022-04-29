@@ -1,0 +1,92 @@
+Database        : crn:v1:bluemix:public:dashdb-for-transactions:us-south:a/e1fccd3bf5e74d4a9a66b13bb942d5c9:84a4da94-1abb-4b3e-8f25-5df9dceecadf::
+Host name       : db2-icd-prod-us-south-db-0abbw-private-alb.db2.databases.appdomain.cloud                                                        
+Authorization Id: kft07830                                                                                                                        
+Run method      : JDBC                                                                                                                            
+Date            : Apr 29, 2022 4:11:22 PM                                                                                                         
+Status          : completed                                                                                                                       
+
+SELECT * FROM EMPLOYEES WHERE SALARY <AVG(SALARY)
+
+SELECT * FROM EMPLOYEES WHERE SALARY <(SELECT AVG(SALARY) FROM EMPLOYEES)
+
+SELECT EMP_ID, SALARY, MAX(SALARY) AS MAX_SALARY FROM EMPLOYEES
+
+SELECT EMP_ID, SALARY,(SELECT MAX(SALARY) FROM EMPLOYEES)AS MAX_SALARY FROM EMPLOYEES
+
+SELECT * FROM(SELECT EMP_ID, F_NAME, L_NAME, DEP_ID FROM EMPLOYEES) AS EMPINFO
+
+
+
+=======================================================================================
+SELECT * FROM EMPLOYEES WHERE SALARY <AVG(SALARY)
+
+Run time (seconds): 0.020 
+Status            : failed
+
+Invalid use of an aggregate function or OLAP function.. SQLCODE=-120, SQLSTATE=42903, DRIVER=4.27.25
+
+=======================================================================================
+SELECT * FROM EMPLOYEES WHERE SALARY <(SELECT AVG(SALARY) FROM EMPLOYEES)
+
+Run time (seconds): 0.004    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  SSN       B_DATE     SEX ADDRESS                      JOB_ID    SALARY   MANAGER_ID DEP_ID   
+--------- ------- ------- --------- ---------- --- ---------------------------- --------- -------- ---------- ---------
+E1003     Steve   Wells   123458    1980-08-10 M   291 Springs, Gary,IL         300       50000.00 30002      5        
+E1004     Santosh Kumar   123459    1985-07-20 M   511 Aurora Av, Aurora,IL     400       60000.00 30004      5        
+E1005     Ahmed   Hussain 123410    1981-01-04 M   216 Oak Tree, Geneva,IL      500       70000.00 30001      2        
+E1007     Mary    Thomas  123412    1975-05-05 F   100 Rose Pl, Gary,IL         650       65000.00 30003      7        
+E1008     Bharath Gupta   123413    1985-05-06 M   145 Berry Ln, Naperville,IL  660       65000.00 30003      7        
+E1009     Andrea  Jones   123414    1990-07-09 F   120 Fall Creek, Gary,IL      234       70000.00 30003      7        
+E1010     Ann     Jacob   123415    1982-03-30 F   111 Britany Springs,Elgin,IL 220       70000.00 30004      5        
+
+
+=======================================================================================
+SELECT EMP_ID, SALARY, MAX(SALARY) AS MAX_SALARY FROM EMPLOYEES
+
+Run time (seconds): 0.016 
+Status            : failed
+
+An expression starting with "SALARY" specified in a SELECT clause, HAVING clause, or ORDER BY clause is not specified in the GROUP BY clause or it is in a SELECT clause, HAVING clause, or ORDER BY clause with a column function and no GROUP BY clause is specified.. SQLCODE=-119, SQLSTATE=42803, DRIVER=4.27.25
+
+=======================================================================================
+SELECT EMP_ID, SALARY,(SELECT MAX(SALARY) FROM EMPLOYEES)AS MAX_SALARY FROM EMPLOYEES
+
+Run time (seconds): 0.004    
+Status            : succeeded
+
+EMP_ID    SALARY    MAX_SALARY
+--------- --------- ----------
+E1001     100000.00  100000.00
+E1002      80000.00  100000.00
+E1003      50000.00  100000.00
+E1004      60000.00  100000.00
+E1005      70000.00  100000.00
+E1006      90000.00  100000.00
+E1007      65000.00  100000.00
+E1008      65000.00  100000.00
+E1009      70000.00  100000.00
+E1010      70000.00  100000.00
+
+
+=======================================================================================
+SELECT * FROM(SELECT EMP_ID, F_NAME, L_NAME, DEP_ID FROM EMPLOYEES) AS EMPINFO
+
+Run time (seconds): 0.004    
+Status            : succeeded
+
+EMP_ID    F_NAME  L_NAME  DEP_ID   
+--------- ------- ------- ---------
+E1001     John    Thomas  2        
+E1002     Alice   James   5        
+E1003     Steve   Wells   5        
+E1004     Santosh Kumar   5        
+E1005     Ahmed   Hussain 2        
+E1006     Nancy   Allen   2        
+E1007     Mary    Thomas  7        
+E1008     Bharath Gupta   7        
+E1009     Andrea  Jones   7        
+E1010     Ann     Jacob   5        
+
+
